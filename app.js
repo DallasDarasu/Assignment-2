@@ -12,7 +12,7 @@
 
             buy.itens = [
                 {
-                    name: "chocolate",
+                    name: "bar of chocolate",
                     qnt: 1 
                 },
                 {
