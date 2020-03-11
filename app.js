@@ -1,9 +1,16 @@
 (function () {
     'use strict';
     angular.module('Assignment', [])
+        .controller('ToBuyController', ToBuyController)
+        .controller('AlreadyBoughtController', AlreadyBoughtController)
+        .service('ShoppingListCheckOffService', ShoppingListCheckOffService);
 
-        .controller('checkOffList', function ($scope) {
-            $scope.itens = [
+
+        ToBuyController.$inject = ['ShoppingListCheckOffService'];
+        function ToBuyController(ShoppingListCheckOffService){
+            var buy = this;
+
+            buy.itens = [
                 {
                     name: "chocolate",
                     qnt: 1 
@@ -26,11 +33,30 @@
                 }
             ];
 
-            $scope.bought = [];
-
-            $scope.buyItem = function (item) {
-                $scope.bought.push($scope.itens.splice(item.$index, 1)[0]);
+            buy.remove = function(item){
+                ShoppingListCheckOffService.buyItem(item);
+                buy.itens.splice(item.$index,1);
             }
-        });
+        }
 
+        AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
+        function AlreadyBoughtController(ShoppingListCheckOffService){
+            var alreadybought = this;
+            
+            alreadybought.bought = ShoppingListCheckOffService.getItens();
+        }
+
+        function ShoppingListCheckOffService(){
+            var service = this;
+
+            var itemTransfer = [];
+
+            service.buyItem = function (item) {
+                itemTransfer.push(item);
+            }
+
+            service.getItens = function(){
+                return itemTransfer;
+            }
+        }
 })();
